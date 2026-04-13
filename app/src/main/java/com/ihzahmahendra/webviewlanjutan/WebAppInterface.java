@@ -37,34 +37,25 @@ public class WebAppInterface {
     public void showGoogleLens() {
         Toast.makeText(mContext, "Opening Google Lens...", Toast.LENGTH_SHORT).show();
 
-        String[] lensUris = {
-            "googleapp://lens",
-            "intent://google.com/searchbyimage/uploadedbyte?type=mobile#Intent;scheme=http;package=com.google.android.googlequicksearchbox;end",
-            "intent://www.google.com/searchbyimage/uploadedbyte#Intent;scheme=https;package=com.google.android.googlequicksearchbox;end"
-        };
-
-        boolean launched = false;
-
-        for (String uri : lensUris) {
+        Intent intent = mContext.getPackageManager().getLaunchIntentForPackage("com.google.android.googlequicksearchbox");
+        
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("lens", true);
             try {
-                Intent lensIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                lensIntent.setPackage("com.google.android.googlequicksearchbox");
-                lensIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-                mContext.startActivity(lensIntent);
-                launched = true;
-                break;
+                mContext.startActivity(intent);
+                return;
             } catch (Exception e) {
-                continue;
+                // Fall through
             }
         }
 
-        if (!launched) {
-            try {
-                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://lens.google.com/"));
-                mContext.startActivity(webIntent);
-            } catch (Exception ex) {
-                Toast.makeText(mContext, "Cannot open Google Lens", Toast.LENGTH_SHORT).show();
-            }
+        try {
+            Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://lens.google.com/"));
+            webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(webIntent);
+        } catch (Exception ex) {
+            Toast.makeText(mContext, "Cannot open Google Lens", Toast.LENGTH_SHORT).show();
         }
     }
 }
