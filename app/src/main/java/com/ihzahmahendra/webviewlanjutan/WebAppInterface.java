@@ -35,21 +35,35 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void showGoogleLens() {
-        Intent lensIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("googleapp://lens"));
-        lensIntent.setPackage("com.google.android.googlequicksearchbox");
+        Toast.makeText(mContext, "Opening Google Lens...", Toast.LENGTH_SHORT).show();
 
-        try {
-            mContext.startActivity(lensIntent);
-        } catch (Exception e) {
+        String[] lensUris = {
+            "googleapp://lens",
+            "intent://google.com/searchbyimage/uploadedbyte?type=mobile#Intent;scheme=http;package=com.google.android.googlequicksearchbox;end",
+            "intent://www.google.com/searchbyimage/uploadedbyte#Intent;scheme=https;package=com.google.android.googlequicksearchbox;end"
+        };
+
+        boolean launched = false;
+
+        for (String uri : lensUris) {
+            try {
+                Intent lensIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                lensIntent.setPackage("com.google.android.googlequicksearchbox");
+                lensIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+                mContext.startActivity(lensIntent);
+                launched = true;
+                break;
+            } catch (Exception e) {
+                continue;
+            }
+        }
+
+        if (!launched) {
             try {
                 Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://lens.google.com/"));
                 mContext.startActivity(webIntent);
             } catch (Exception ex) {
-                Intent playStoreIntent = new Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id=com.google.android.googlequicksearchbox")
-                );
-                mContext.startActivity(playStoreIntent);
+                Toast.makeText(mContext, "Cannot open Google Lens", Toast.LENGTH_SHORT).show();
             }
         }
     }

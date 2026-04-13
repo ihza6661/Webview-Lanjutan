@@ -87,7 +87,7 @@
 			}
 
 			function showAndroidGoogleLens() {
-				if (typeof Android !== "undefined" || Android !== null) {
+				if (typeof Android !== "undefined" && Android !== null) {
 					Android.showGoogleLens();
 				} else {
 					alert("Object not found");
