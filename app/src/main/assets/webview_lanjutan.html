@@ -34,6 +34,9 @@
 						<button class="btn btn-info mt-2" onclick="showAndroidWhatsApp()">
 							Mengirim WhatsApp dari JavaScript
 						</button>
+						<button class="btn btn-danger mt-2" onclick="showAndroidGoogleLens()">
+							Buka Google Lens
+						</button>
 					</div>
 				</div>
 				<div class="col-md-12 col-lg-5">
@@ -78,6 +81,14 @@
 
 				if (typeof Android !== "undefined" || Android !== null) {
 					Android.showWhatsApp(nomorHP, message);
+				} else {
+					alert("Object not found");
+				}
+			}
+
+			function showAndroidGoogleLens() {
+				if (typeof Android !== "undefined" || Android !== null) {
+					Android.showGoogleLens();
 				} else {
 					alert("Object not found");
 				}

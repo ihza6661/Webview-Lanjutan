@@ -32,4 +32,25 @@ public class WebAppInterface {
         i.setData(Uri.parse(url));
         mContext.startActivity(i);
     }
+
+    @JavascriptInterface
+    public void showGoogleLens() {
+        Intent lensIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("googleapp://lens"));
+        lensIntent.setPackage("com.google.android.googlequicksearchbox");
+
+        try {
+            mContext.startActivity(lensIntent);
+        } catch (Exception e) {
+            try {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://lens.google.com/"));
+                mContext.startActivity(webIntent);
+            } catch (Exception ex) {
+                Intent playStoreIntent = new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=com.google.android.googlequicksearchbox")
+                );
+                mContext.startActivity(playStoreIntent);
+            }
+        }
+    }
 }
